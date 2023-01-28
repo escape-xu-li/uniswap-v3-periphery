@@ -53,6 +53,7 @@ library LiquidityAmounts {
     /// @param amount0 The amount of token0 being sent in
     /// @param amount1 The amount of token1 being sent in
     /// @return liquidity The maximum amount of liquidity received
+    // sqrtRatioAX96与sqrtRatioBX96组成了要添加的流动性区间
     function getLiquidityForAmounts(
         uint160 sqrtRatioX96,
         uint160 sqrtRatioAX96,
@@ -60,16 +61,20 @@ library LiquidityAmounts {
         uint256 amount0,
         uint256 amount1
     ) internal pure returns (uint128 liquidity) {
+        // 保证first tick价格低于second tick价格
         if (sqrtRatioAX96 > sqrtRatioBX96) (sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
 
         if (sqrtRatioX96 <= sqrtRatioAX96) {
+            // 如果当前价格小于要添加的流动性区间
             liquidity = getLiquidityForAmount0(sqrtRatioAX96, sqrtRatioBX96, amount0);
         } else if (sqrtRatioX96 < sqrtRatioBX96) {
+            // 当前价格处于要添加的流动性价格区间
             uint128 liquidity0 = getLiquidityForAmount0(sqrtRatioX96, sqrtRatioBX96, amount0);
             uint128 liquidity1 = getLiquidityForAmount1(sqrtRatioAX96, sqrtRatioX96, amount1);
 
             liquidity = liquidity0 < liquidity1 ? liquidity0 : liquidity1;
         } else {
+            // 价格高于要添加的流动性区间
             liquidity = getLiquidityForAmount1(sqrtRatioAX96, sqrtRatioBX96, amount1);
         }
     }
