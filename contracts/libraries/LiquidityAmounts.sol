@@ -53,6 +53,7 @@ library LiquidityAmounts {
     /// @param amount0 The amount of token0 being sent in
     /// @param amount1 The amount of token1 being sent in
     /// @return liquidity The maximum amount of liquidity received
+    // sqrtRatioAX96 TODO: 这个价格是指什么价格 amount0对于amount1的还是amount1对于amount0
     // sqrtRatioAX96与sqrtRatioBX96组成了要添加的流动性区间
     function getLiquidityForAmounts(
         uint160 sqrtRatioX96,
