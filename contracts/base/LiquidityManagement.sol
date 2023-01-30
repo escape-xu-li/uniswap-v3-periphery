@@ -68,7 +68,9 @@ abstract contract LiquidityManagement is IUniswapV3MintCallback, PeripheryImmuta
 
         // compute the liquidity amount
         {
+            // sqrt(amountToken1/amountToken0)Q64.96精度的定点数值
             (uint160 sqrtPriceX96, , , , , , ) = pool.slot0();
+            // 获取边界价格
             uint160 sqrtRatioAX96 = TickMath.getSqrtRatioAtTick(params.tickLower);
             uint160 sqrtRatioBX96 = TickMath.getSqrtRatioAtTick(params.tickUpper);
 
