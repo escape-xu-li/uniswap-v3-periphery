@@ -35,15 +35,15 @@ abstract contract LiquidityManagement is IUniswapV3MintCallback, PeripheryImmuta
     }
 
     struct AddLiquidityParams {
-        address token0;
-        address token1;
-        uint24 fee;
-        address recipient;
-        int24 tickLower;
-        int24 tickUpper;
+        address token0; // token0 的地址
+        address token1; // token1 的地址
+        uint24 fee; // 交易费率
+        address recipient; // 流动性的所属人地址
+        int24 tickLower; // 流动性的价格下限（以 token0 计价），这里传入的是 tick index
+        int24 tickUpper; // 流动性的价格上线（以 token0 计价），这里传入的是 tick index
         uint256 amount0Desired;
         uint256 amount1Desired;
-        uint256 amount0Min;
+        uint256 amount0Min; // 提供的 token0 下限，token0的数量必须大于这个值
         uint256 amount1Min;
     }
 
@@ -74,7 +74,7 @@ abstract contract LiquidityManagement is IUniswapV3MintCallback, PeripheryImmuta
             uint160 sqrtRatioAX96 = TickMath.getSqrtRatioAtTick(params.tickLower);
             uint160 sqrtRatioBX96 = TickMath.getSqrtRatioAtTick(params.tickUpper);
 
-            liquidity = LiquidityAmounts.getLiquidityForAmounts(
+            liquidity = LiquidityAmounts.getLiquidityForAmounts( //TODO:这里获取的应该是 liquidityDelta: int256(amount).toInt128()
                 sqrtPriceX96,
                 sqrtRatioAX96,
                 sqrtRatioBX96,
